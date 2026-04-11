@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
-import { prisma } from '../prisma';
-import { otpService } from '../utils/otp';
+import { prisma } from '../prisma.js';
+import { otpService } from '../utils/otp.js';
 
 const otpSchema = z.object({
   phone: z.string().min(10),
