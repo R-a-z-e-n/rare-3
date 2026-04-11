@@ -57,14 +57,15 @@ export default function LoginPage() {
         }
       })
     } else {
-      if (!showOtpField) {
-        handleSendOtp()
+      if (!phone || phone.length < 10) {
+        toast.error('Please enter a valid phone number')
         return
       }
-      mobileLogin.mutate({ phone, otp: otp.join('') }, {
+      // Direct phone login — no OTP required
+      mobileLogin.mutate({ phone, otp: '' }, {
         onSuccess: (data) => {
           localStorage.setItem('ra_user', JSON.stringify(data))
-          toast.success(`Welcome back, ${data.name}. Logged in via mobile.`)
+          toast.success(`Welcome, ${data.name}. Logged in via mobile.`)
           navigate('/dashboard')
         }
       })
@@ -203,34 +204,7 @@ export default function LoginPage() {
                     </div>
                   </div>
 
-                  {showOtpField && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="space-y-4"
-                    >
-                      <label className="text-[10px] uppercase tracking-[3px] text-mauve/60 font-medium">Verification Code</label>
-                      <div className="flex justify-between gap-2">
-                        {otp.map((digit, i) => (
-                          <input
-                            key={i}
-                            id={`otp-${i}`}
-                            type="text"
-                            maxLength={1}
-                            value={digit}
-                            onChange={(e) => handleOtpChange(i, e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Backspace' && !otp[i] && i > 0) {
-                                document.getElementById(`otp-${i - 1}`)?.focus()
-                              }
-                            }}
-                            className="w-full aspect-square bg-linen/30 border-none text-center text-xl text-dark focus:ring-1 focus:ring-gold outline-none transition-all rounded-sm shadow-inner"
-                          />
-                        ))}
-                      </div>
-                      <p className="text-[9px] text-mauve/40 italic">Check your mobile for the 6-digit code.</p>
-                    </motion.div>
-                  )}
+
                 </div>
               )}
             </div>
@@ -240,7 +214,7 @@ export default function LoginPage() {
               className="w-full h-16 text-xs tracking-[4px] uppercase font-bold"
               isLoading={login.isPending || mobileLogin.isPending || sendOtp.isPending}
             >
-              {loginMethod === 'mobile' && !showOtpField ? 'Send OTP' : 'Sign In'}
+              {loginMethod === 'mobile' ? 'Sign In with Mobile' : 'Sign In'}
             </Button>
           </form>
 

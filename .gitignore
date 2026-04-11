@@ -53,3 +53,5 @@ server/database.sqlite-shm
 # Server deps
 server/node_modules
 server/dist
+
+.vercel

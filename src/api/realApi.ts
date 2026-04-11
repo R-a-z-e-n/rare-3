@@ -16,7 +16,7 @@ export const realApi = {
       return response.data
     },
     loginWithMobile: async (phone: string, otp: string): Promise<User & { token: string }> => {
-      const response = await client.post('/auth/verify-otp', { phone, otp })
+      const response = await client.post('/auth/phone-login', { phone })
       return response.data
     },
   },
