@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: rare-wellness
+    env: node
+    buildCommand: npm run build:all
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: /opt/render/project/src/data/rare.db
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000
+    disk:
+      name: rare-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
