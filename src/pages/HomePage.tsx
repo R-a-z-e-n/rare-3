@@ -30,11 +30,11 @@ export default function HomePage() {
   const { data: services = [], isLoading: isLoadingServices } = useServices()
   const { data: products = [], isLoading: isLoadingProducts } = useProducts()
 
-  const destinations = services.slice(0, 4)
-  const featuredProducts = products.filter(p => p.category === 'Skincare').slice(0, 4)
-  const aromaProducts = products.filter(p => p.category === 'Fragrance').slice(0, 6)
+  const destinations = Array.isArray(services) ? services.slice(0, 4) : []
+  const featuredProducts = Array.isArray(products) ? products.filter(p => p.category === 'Skincare').slice(0, 4) : []
+  const aromaProducts = Array.isArray(products) ? products.filter(p => p.category === 'Fragrance').slice(0, 6) : []
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
     containScroll: 'trimSnaps'
   })
@@ -68,9 +68,9 @@ export default function HomePage() {
             </div>
           </motion.div>
         ))}
-        <motion.div 
+        <motion.div
           initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ duration: 1.5, delay: 1 }}
-          className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gold/30 to-transparent z-10 hidden md:block" 
+          className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gold/30 to-transparent z-10 hidden md:block"
         />
       </section>
 
@@ -159,7 +159,7 @@ export default function HomePage() {
                 The Aroma <br /><em className="text-rose italic">Collection</em>
               </h2>
               <p className="text-mauve text-sm mb-10 leading-relaxed font-light">
-                Elevate your sanctuary with our curated selection of botanical scents. 
+                Elevate your sanctuary with our curated selection of botanical scents.
                 Each fragrance is hand-picked to create a multisensory experience of calmness.
               </p>
               <Button variant="default" onClick={() => navigate('/shop?category=Fragrance')}>
@@ -169,13 +169,13 @@ export default function HomePage() {
           </div>
           <div className="lg:w-3/5 relative min-h-[400px] order-1 lg:order-2">
             <div className="flex justify-end gap-2 mb-6 lg:absolute lg:-top-16 lg:right-0 z-10">
-              <button 
+              <button
                 onClick={() => emblaApi?.scrollPrev()}
                 className="w-8 h-8 rounded-full border border-dark/10 flex items-center justify-center hover:bg-dark hover:text-cream transition-all"
               >
                 <ChevronRight className="w-4 h-4 rotate-180" />
               </button>
-              <button 
+              <button
                 onClick={() => emblaApi?.scrollNext()}
                 className="w-8 h-8 rounded-full border border-dark/10 flex items-center justify-center hover:bg-dark hover:text-cream transition-all"
               >
@@ -192,7 +192,7 @@ export default function HomePage() {
                 ) : (
                   aromaProducts.map((p) => (
                     <div key={p.id} className="flex-[0_0_80%] sm:flex-[0_0_45%] min-w-0">
-                      <motion.div 
+                      <motion.div
                         whileHover={{ y: -10 }}
                         onClick={() => navigate(`/shop?id=${p.id}`)}
                         className="relative aspect-[3/4] overflow-hidden shadow-xl cursor-pointer"
@@ -264,7 +264,7 @@ export default function HomePage() {
               <em className="text-rose italic">Relaxed</em> & Renew
             </h2>
             <p className="text-mauve text-sm leading-relaxed mb-8 font-light max-w-md">
-              RARE is a curated sanctuary for those who seek authentic transformation. 
+              RARE is a curated sanctuary for those who seek authentic transformation.
               We believe in the power of calm luxury, where every experience is designed to restore and inspire.
             </p>
             <div className="border-l-2 border-gold/40 pl-6 mb-12">
@@ -331,8 +331,8 @@ export default function HomePage() {
               <ScrollReveal key={i} delay={i * 0.1}>
                 <div className={cn(
                   "relative p-10 border transition-all duration-500 flex flex-col h-full group",
-                  m.featured 
-                    ? "bg-linen/5 border-gold shadow-[0_20px_50px_-15px_rgba(212,175,122,0.15)] scale-105 z-10" 
+                  m.featured
+                    ? "bg-linen/5 border-gold shadow-[0_20px_50px_-15px_rgba(212,175,122,0.15)] scale-105 z-10"
                     : "bg-white/[0.02] border-white/10 hover:border-gold/30"
                 )}>
                   {m.featured && (
@@ -350,8 +350,8 @@ export default function HomePage() {
                       </li>
                     ))}
                   </ul>
-                  <Button 
-                    variant={m.featured ? 'default' : 'outline-cream'} 
+                  <Button
+                    variant={m.featured ? 'default' : 'outline-cream'}
                     className="w-full text-[10px] tracking-[4px]"
                     onClick={() => navigate('/signup')}
                   >

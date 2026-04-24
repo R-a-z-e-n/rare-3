@@ -15,11 +15,11 @@ export default function ShopPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortOption, setSortOption] = useState<SortOption>('Featured')
 
-  const filteredProducts = products
+  const filteredProducts = Array.isArray(products) ? products
     .filter(p => {
       const matchesCategory = activeCategory === 'All' || p.category === activeCategory
-      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            p.brand.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchQuery.toLowerCase())
       return matchesCategory && matchesSearch
     })
     .sort((a, b) => {
@@ -27,12 +27,12 @@ export default function ShopPage() {
       if (sortOption === 'Price: High') return b.price - a.price
       if (sortOption === 'Rating') return b.rating - a.rating
       return 0
-    })
+    }) : []
 
   return (
     <div className="bg-cream min-h-screen pb-32">
-      <PageHeader 
-        label="The Edit" 
+      <PageHeader
+        label="The Edit"
         title="Curated <em class='text-rose italic'>Essentials</em>"
         subtitle="Discover a hand-picked collection of the world's finest skincare, fragrances, and wellness rituals."
       />
@@ -60,13 +60,13 @@ export default function ShopPage() {
         {/* Toolbar */}
         <div className="flex flex-col lg:flex-row justify-between items-center gap-8 mb-12">
           <FilterPills options={CATEGORIES} active={activeCategory} onChange={setActiveCategory} />
-          
+
           <div className="flex w-full lg:w-auto gap-4">
             <div className="relative flex-1 lg:w-80">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gold" />
-              <input 
-                type="text" 
-                placeholder="Search products or brands..." 
+              <input
+                type="text"
+                placeholder="Search products or brands..."
                 className="w-full bg-linen border-none p-4 pl-12 text-sm focus:ring-1 focus:ring-gold outline-none"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
@@ -74,7 +74,7 @@ export default function ShopPage() {
             </div>
             <div className="relative group">
               <SlidersHorizontal className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gold pointer-events-none" />
-              <select 
+              <select
                 value={sortOption}
                 onChange={e => setSortOption(e.target.value as SortOption)}
                 className="bg-linen border-none p-4 pl-12 pr-10 text-[11px] uppercase tracking-widest text-dark focus:ring-1 focus:ring-gold outline-none appearance-none cursor-pointer"

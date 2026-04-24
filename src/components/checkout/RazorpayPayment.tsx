@@ -62,11 +62,12 @@ export function RazorpayPayment({ onSuccess, onBack, isPending, amount, formData
         prefill: {
           name: `${formData.firstName} ${formData.lastName}`,
           email: formData.email,
-          contact: '', 
+          contact: '',
         },
         theme: {
           color: '#1a1a1a',
         },
+        // Show only UPI (QR) and Card options
         config: {
           display: {
             blocks: {
@@ -75,13 +76,22 @@ export function RazorpayPayment({ onSuccess, onBack, isPending, amount, formData
                 instruments: [
                   {
                     method: 'upi',
-                  },
-                ],
+                    protocols: ['vpa', 'qr']
+                  }
+                ]
               },
+              card: {
+                name: 'Credit / Debit Card',
+                instruments: [
+                  {
+                    method: 'card'
+                  }
+                ]
+              }
             },
-            sequence: ['block.upi', 'block.other'],
+            sequence: ['block.upi', 'block.card'],
             preferences: {
-              show_default_blocks: true,
+              show_default_blocks: false,
             },
           },
         },
@@ -103,36 +113,36 @@ export function RazorpayPayment({ onSuccess, onBack, isPending, amount, formData
   return (
     <div className="space-y-8">
       <SectionLabel text="Payment Method" />
-      
+
       <div className="bg-cream p-8 rounded-sm border border-dark/5 space-y-6">
         <div className="flex items-center gap-4 text-dark italic font-playfair text-lg">
           <Smartphone className="w-5 h-5 text-gold" />
           Razorpay Secure Checkout
         </div>
-        
+
         <p className="text-xs text-mauve/60 leading-relaxed">
-          Pay securely via <strong>UPI (Google Pay, Paytm)</strong>, QR Code, Cards, or NetBanking. 
+          Pay securely via <strong>UPI (QR Code, Google Pay)</strong> or <strong>Credit/Debit Cards</strong>.
           Your payment is processed securely by Razorpay.
         </p>
 
         <div className="pt-2 flex items-center gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
           <img src="https://razorpay.com/assets/razorpay-glyph.svg" alt="Razorpay" className="h-5" />
           <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" alt="UPI" className="h-4" />
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Pay_Logo.svg" alt="Google Pay" className="h-4" />
-          <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" alt="Paytm" className="h-3" />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" className="h-3" />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-5" />
         </div>
       </div>
 
       <div className="pt-8 space-y-4">
-        <Button 
-          variant="default" 
+        <Button
+          variant="default"
           className="w-full h-16 text-xs tracking-[4px]"
           onClick={handlePayment}
           disabled={loading || isPending}
         >
           {loading ? 'INITIALIZING...' : 'PAY NOW'}
         </Button>
-        <button 
+        <button
           onClick={onBack}
           className="w-full text-[10px] uppercase tracking-widest text-mauve hover:text-dark transition-colors"
         >
