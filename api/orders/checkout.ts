@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { prisma } from '../prisma.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -8,12 +7,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const orderData = req.body;
-    
+
     // In a real application, you would create an order in the database here
     // For now, we'll return a simulated success with a random order ID
-    
+
     const orderId = `RARE-${Math.floor(1000 + Math.random() * 9000)}`;
-    
+
     // Optional: Log the order or save to DB if schema exists
     console.log('Order received:', orderData);
 
