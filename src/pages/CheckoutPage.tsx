@@ -5,12 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { Button, SectionLabel } from '@/components/ui'
 import { useCart } from '@/context/CartContext'
 import { useCheckout } from '@/hooks/useCheckout'
-import { loadStripe } from '@stripe/stripe-js'
-import { Elements } from '@stripe/react-stripe-js'
-import { StripePaymentForm } from '@/components/checkout/StripePaymentForm'
+import { RazorpayPayment } from '@/components/checkout/RazorpayPayment'
 
-// Initialize Stripe (Placeholder Key)
-const stripePromise = loadStripe('pk_test_rare_wellness_placeholder')
 
 const STEPS = [
   { id: 'info', label: 'Information', icon: User },
@@ -203,13 +199,13 @@ export default function CheckoutPage() {
                   )}
 
                   {currentStep === 2 && (
-                    <Elements stripe={stripePromise}>
-                      <StripePaymentForm 
-                        onSuccess={(id) => processOrder(id)}
-                        onBack={() => setCurrentStep(s => s - 1)}
-                        isPending={checkoutMutation.isPending}
-                      />
-                    </Elements>
+                    <RazorpayPayment 
+                      amount={total}
+                      formData={formData}
+                      onSuccess={(id) => processOrder(id)}
+                      onBack={() => setCurrentStep(s => s - 1)}
+                      isPending={checkoutMutation.isPending}
+                    />
                   )}
                 </motion.div>
               </AnimatePresence>

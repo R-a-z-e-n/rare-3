@@ -63,4 +63,10 @@ export const realApi = {
       await client.delete(`/wishlist/${productId}`)
     },
   },
+  orders: {
+    checkout: async (data: any): Promise<{ success: boolean; orderId: string }> => {
+      const response = await client.post('/orders/checkout', data)
+      return response.data
+    },
+  },
 }
