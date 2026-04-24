@@ -15,7 +15,7 @@ export const realApi = {
       const response = await client.post('/auth/send-otp', { phone })
       return response.data
     },
-    loginWithMobile: async (phone: string, otp: string): Promise<User & { token: string }> => {
+    loginWithMobile: async (phone: string, _otp: string): Promise<User & { token: string }> => {
       const response = await client.post('/auth/phone-login', { phone })
       return response.data
     },
@@ -33,7 +33,11 @@ export const realApi = {
   services: {
     list: async (category?: string): Promise<Service[]> => {
       const response = await client.get('/services', { params: { category } })
-      return response.data
+      const filteredServices = Array.isArray(response.data) ? response.data.filter((s: any) => {
+        const matchesCategory = category === 'All' || s.category === category
+        return matchesCategory
+      }) : []
+      return filteredServices
     },
     getById: async (id: number): Promise<Service> => {
       const response = await client.get(`/services/${id}`)

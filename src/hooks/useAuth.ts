@@ -40,10 +40,11 @@ export function useSignup() {
       navigate('/dashboard')
     },
     onError: (error: AxiosError<any>) => {
-      if (error.response?.data?.errors?.length > 0) {
-        toast.error(`Validation Error: ${error.response.data.errors[0].message}`)
+      const data = error.response?.data
+      if (data?.errors && Array.isArray(data.errors) && data.errors.length > 0) {
+        toast.error(`Validation Error: ${data.errors[0].message}`)
       } else {
-        const msg = error.response?.data?.message || 'The ritual could not be initiated'
+        const msg = data?.message || 'The ritual could not be initiated'
         toast.error(msg)
       }
     }
@@ -62,10 +63,11 @@ export function useMobileLogin() {
       navigate('/dashboard')
     },
     onError: (error: AxiosError<any>) => {
-      if (error.response?.data?.errors?.length > 0) {
-        toast.error(`Validation Error: ${error.response.data.errors[0].message}`)
+      const data = error.response?.data
+      if (data?.errors && Array.isArray(data.errors) && data.errors.length > 0) {
+        toast.error(`Validation Error: ${data.errors[0].message}`)
       } else {
-        const msg = error.response?.data?.message || 'Mobile login failed'
+        const msg = data?.message || 'Mobile login failed'
         toast.error(msg)
       }
     }
@@ -83,10 +85,11 @@ export function useSendOtp() {
       }
     },
     onError: (error: AxiosError<any>) => {
-      if (error.response?.data?.errors?.length > 0) {
-        toast.error(`Validation Error: ${error.response.data.errors[0].message}`)
+      const data = error.response?.data
+      if (data?.errors && Array.isArray(data.errors) && data.errors.length > 0) {
+        toast.error(`Validation Error: ${data.errors[0].message}`)
       } else {
-        const msg = error.response?.data?.message || 'Failed to send OTP'
+        const msg = data?.message || 'Failed to send OTP'
         toast.error(msg)
       }
     }

@@ -31,8 +31,8 @@ export default function HomePage() {
   const { data: products = [], isLoading: isLoadingProducts } = useProducts()
 
   const destinations = Array.isArray(services) ? services.slice(0, 4) : []
-  const featuredProducts = Array.isArray(products) ? products.filter(p => p.category === 'Skincare').slice(0, 4) : []
-  const aromaProducts = Array.isArray(products) ? products.filter(p => p.category === 'Fragrance').slice(0, 6) : []
+  const featuredProducts = Array.isArray(products) ? (products as any[]).filter((p: any) => p.category === 'Skincare').slice(0, 4) : []
+  const aromaProducts = Array.isArray(products) ? (products as any[]).filter((p: any) => p.category === 'Fragrance').slice(0, 6) : []
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',

@@ -16,17 +16,17 @@ export default function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedService, setSelectedService] = useState<Service | null>(null)
 
-  const filteredServices = services.filter(s => {
+  const filteredServices = Array.isArray(services) ? services.filter(s => {
     const matchesCategory = activeCategory === 'All' || s.category === activeCategory
-    const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          s.location.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.location.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesCategory && matchesSearch
-  })
+  }) : []
 
   return (
     <div className="bg-cream min-h-screen pb-32">
-      <PageHeader 
-        label="Destinations" 
+      <PageHeader
+        label="Destinations"
         title="Explore Your <em className='text-rose italic'>Sanctuary</em>"
         subtitle="Discover curated wellness experiences designed to restore balance and inspire transformation across California."
       />
@@ -35,17 +35,17 @@ export default function ServicesPage() {
         {/* Search & Filter Bar */}
         <ScrollReveal>
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-16">
-            <FilterPills 
-              options={CATEGORIES} 
-              active={activeCategory} 
-              onChange={setActiveCategory} 
+            <FilterPills
+              options={CATEGORIES}
+              active={activeCategory}
+              onChange={setActiveCategory}
             />
-            
+
             <div className="relative w-full md:w-80">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gold" />
-              <input 
-                type="text" 
-                placeholder="Search by name or location..." 
+              <input
+                type="text"
+                placeholder="Search by name or location..."
                 className="w-full bg-linen border-none p-4 pl-12 text-sm focus:ring-1 focus:ring-gold outline-none"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
@@ -67,7 +67,7 @@ export default function ServicesPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               <AnimatePresence mode="popLayout">
-                {filteredServices.map((service, index) => (
+                {Array.isArray(filteredServices) && filteredServices.map((service, index) => (
                   <ScrollReveal key={service.id} delay={index * 0.1}>
                     <motion.div
                       layout
@@ -85,7 +85,7 @@ export default function ServicesPage() {
                           </button>
                         </div>
                         <div className="absolute bottom-4 left-4 flex gap-2">
-                          {service.tags.map(tag => <Tag key={tag} label={tag} variant="gold" />)}
+                          {Array.isArray(service.tags) && service.tags.map((tag: string) => <Tag key={tag} label={tag} variant="gold" />)}
                         </div>
                       </div>
 
@@ -104,7 +104,7 @@ export default function ServicesPage() {
                           </div>
                           <StarRating rating={service.rating} />
                         </div>
-                        
+
                         <div className="flex items-center justify-between pt-6 border-t border-dark/5">
                           <p className="text-xl font-playfair text-gold">{service.price}<span className="text-[10px] text-mauve/60 uppercase tracking-widest ml-1 font-sans">/ session</span></p>
                           <Button onClick={() => setSelectedService(service)}>Book Now</Button>
@@ -119,10 +119,10 @@ export default function ServicesPage() {
         </div>
       </div>
 
-      <BookingModal 
-        isOpen={!!selectedService} 
-        onClose={() => setSelectedService(null)} 
-        serviceName={selectedService?.name || ''} 
+      <BookingModal
+        isOpen={!!selectedService}
+        onClose={() => setSelectedService(null)}
+        serviceName={selectedService?.name || ''}
       />
     </div>
   )

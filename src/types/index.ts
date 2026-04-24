@@ -102,3 +102,10 @@ export interface SignupCredentials {
   email: string
   password?: string
 }
+
+export interface WishlistItem {
+  id: string
+  userId: string
+  productId: string
+  product?: Product
+}
