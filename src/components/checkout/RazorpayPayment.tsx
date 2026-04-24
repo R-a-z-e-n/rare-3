@@ -33,15 +33,15 @@ export function RazorpayPayment({ onSuccess, onBack, isPending, amount, formData
 
       // 2. Options for Razorpay
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Use the public key
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: order.amount,
         currency: order.currency,
         name: 'RARE Wellness',
-        description: 'Product Purchase',
+        description: 'UPI, QR, Cards, and NetBanking',
+        image: 'https://cdn.razorpay.com/logos/H9u9Y38079u9Y3_medium.png', // Optional: You can put your logo URL here
         order_id: order.id,
         handler: async (response: any) => {
           try {
-            // 3. Verify payment on the server
             const { data: verification } = await axios.post('/api/payments/verify-payment', {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
@@ -62,10 +62,28 @@ export function RazorpayPayment({ onSuccess, onBack, isPending, amount, formData
         prefill: {
           name: `${formData.firstName} ${formData.lastName}`,
           email: formData.email,
-          contact: '', // Optional: you can add a phone field to formData if available
+          contact: '', 
         },
         theme: {
           color: '#1a1a1a',
+        },
+        config: {
+          display: {
+            blocks: {
+              upi: {
+                name: 'Pay via UPI / QR',
+                instruments: [
+                  {
+                    method: 'upi',
+                  },
+                ],
+              },
+            },
+            sequence: ['block.upi', 'block.other'],
+            preferences: {
+              show_default_blocks: true,
+            },
+          },
         },
       }
 
@@ -93,16 +111,15 @@ export function RazorpayPayment({ onSuccess, onBack, isPending, amount, formData
         </div>
         
         <p className="text-xs text-mauve/60 leading-relaxed">
-          Pay securely via UPI, Cards, NetBanking, or Wallets through Razorpay. 
-          Your payment is processed in a secure environment.
+          Pay securely via <strong>UPI (Google Pay, Paytm)</strong>, QR Code, Cards, or NetBanking. 
+          Your payment is processed securely by Razorpay.
         </p>
 
-        <div className="pt-2">
-          <img 
-            src="https://razorpay.com/assets/razorpay-glyph.svg" 
-            alt="Razorpay" 
-            className="h-6 opacity-40 grayscale"
-          />
+        <div className="pt-2 flex items-center gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+          <img src="https://razorpay.com/assets/razorpay-glyph.svg" alt="Razorpay" className="h-5" />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" alt="UPI" className="h-4" />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Pay_Logo.svg" alt="Google Pay" className="h-4" />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" alt="Paytm" className="h-3" />
         </div>
       </div>
 
