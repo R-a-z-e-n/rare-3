@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Building2, Users, Star, TrendingUp, Shield, Check, 
   Sparkles, Scissors, Activity, MapPin, Calendar, 
-  Globe, Home, User, Phone, Mail, Upload 
+  Globe, Home, User, Phone, Mail, Upload,
+  Droplet, Package, Heart, FileText, Factory
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
@@ -24,6 +25,8 @@ interface PartnerFormData {
   serviceTags: string[]
   images: File[]
   agreedToTerms: boolean
+  licenseNumber: string
+  manufacturingLocation: string
 }
 
 const BENEFITS = [
@@ -34,39 +37,6 @@ const BENEFITS = [
 ]
 
 const STEPS = ['Business Type', 'Your Details', 'Review & Submit']
-
-const PROVIDER_TYPES = [
-  {
-    id: 'spa',
-    icon: Sparkles,
-    title: 'Spa & Wellness',
-    description: 'Day spas, wellness centers, holistic treatments',
-  },
-  {
-    id: 'salon',
-    icon: Scissors,
-    title: 'Salon & Beauty',
-    description: 'Hair, nails, makeup, and grooming studios',
-  },
-  {
-    id: 'fitness',
-    icon: Activity,
-    title: 'Fitness & Yoga',
-    description: 'Yoga studios, personal training, meditation centers',
-  },
-  {
-    id: 'retreat',
-    icon: MapPin,
-    title: 'Retreat & Destination',
-    description: 'Wellness retreats, resorts, travel experiences',
-  },
-]
-
-const SERVICE_TAGS = [
-  'Massage', 'Facial', 'Body Wrap', 'Yoga', 'Meditation',
-  'Hair', 'Nails', 'Nutrition', 'Personal Training', 'Detox',
-  'Aromatherapy', 'Ayurveda', 'Hydrotherapy', 'Cryotherapy'
-]
 
 const stepVariants = {
   enter: (direction: number) => ({
@@ -80,7 +50,7 @@ const stepVariants = {
   })
 }
 
-export function PartnerOnboarding() {
+export function PartnerOnboarding({ type = 'destination' }: { type?: 'destination' | 'product' | 'service' }) {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
   const [direction, setDirection] = useState(1)
@@ -101,7 +71,76 @@ export function PartnerOnboarding() {
     serviceTags: [],
     images: [],
     agreedToTerms: false,
+    licenseNumber: '',
+    manufacturingLocation: '',
   })
+
+  const getConfig = () => {
+    switch (type) {
+      case 'product':
+        return {
+          title: 'Grow your Brand',
+          step0Title: 'What best describes your products?',
+          step1Title: 'Tell us about your brand',
+          nameLabel: 'Brand Name',
+          namePlaceholder: 'Rare Botanicals',
+          extraFieldLabel: 'Manufacturing Location',
+          extraFieldPlaceholder: 'e.g. Grasse, France',
+          extraFieldKey: 'manufacturingLocation' as keyof PartnerFormData,
+          extraFieldIcon: Factory,
+          tagsLabel: 'Product Categories',
+          tags: ['Skincare', 'Aromatherapy', 'Supplements', 'Bath & Body', 'Haircare', 'Tools & Accessories', 'Fragrance', 'Teas & Tonics'],
+          types: [
+            { id: 'skincare', icon: Droplet, title: 'Skincare', description: 'Serums, moisturizers, cleansers' },
+            { id: 'aroma', icon: Sparkles, title: 'Aromatherapy', description: 'Essential oils, candles, incense' },
+            { id: 'supplements', icon: Activity, title: 'Supplements', description: 'Vitamins, ingestible wellness' },
+            { id: 'tools', icon: Package, title: 'Tools & Accessories', description: 'Gua sha, brushes, wellness tools' },
+          ]
+        }
+      case 'service':
+        return {
+          title: 'Grow your Practice',
+          step0Title: 'What best describes your practice?',
+          step1Title: 'Tell us about your clinic or practice',
+          nameLabel: 'Clinic / Spa Name',
+          namePlaceholder: 'Lume Wellness Clinic',
+          extraFieldLabel: 'License / Certification Number',
+          extraFieldPlaceholder: 'e.g. MED-89274',
+          extraFieldKey: 'licenseNumber' as keyof PartnerFormData,
+          extraFieldIcon: FileText,
+          tagsLabel: 'Treatment Types',
+          tags: ['Dermatology', 'Acupuncture', 'Massage Therapy', 'Nutrition Counseling', 'Chiropractic', 'Sound Healing', 'Reiki', 'Ayurvedic'],
+          types: [
+            { id: 'clinic', icon: Building2, title: 'Wellness Clinic', description: 'Medical spas, aesthetic clinics' },
+            { id: 'therapy', icon: Heart, title: 'Therapy & Healing', description: 'Mental health, holistic healing' },
+            { id: 'salon', icon: Scissors, title: 'Salon & Beauty', description: 'Hair, nails, makeup, grooming' },
+            { id: 'fitness', icon: Activity, title: 'Fitness & Yoga', description: 'Personal training, yoga, pilates' },
+          ]
+        }
+      default:
+        return {
+          title: 'Grow your Sanctuary',
+          step0Title: 'What best describes your business?',
+          step1Title: 'Tell us about your sanctuary',
+          nameLabel: 'Business Name',
+          namePlaceholder: 'Lume Wellness Spa',
+          extraFieldLabel: 'Years in Operation',
+          extraFieldPlaceholder: 'e.g. 5 years',
+          extraFieldKey: 'yearsInOperation' as keyof PartnerFormData,
+          extraFieldIcon: Calendar,
+          tagsLabel: 'Services Offered',
+          tags: ['Massage', 'Facial', 'Body Wrap', 'Yoga', 'Meditation', 'Hair', 'Nails', 'Nutrition', 'Personal Training', 'Detox', 'Aromatherapy', 'Ayurveda', 'Hydrotherapy', 'Cryotherapy'],
+          types: [
+            { id: 'spa', icon: Sparkles, title: 'Spa & Wellness', description: 'Day spas, wellness centers, holistic treatments' },
+            { id: 'salon', icon: Scissors, title: 'Salon & Beauty', description: 'Hair, nails, makeup, and grooming studios' },
+            { id: 'fitness', icon: Activity, title: 'Fitness & Yoga', description: 'Yoga studios, personal training, meditation centers' },
+            { id: 'retreat', icon: MapPin, title: 'Retreat & Destination', description: 'Wellness retreats, resorts, travel experiences' },
+          ]
+        }
+    }
+  }
+
+  const config = getConfig()
 
   const updateForm = (field: keyof PartnerFormData, value: any) =>
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -128,7 +167,7 @@ export function PartnerOnboarding() {
     await new Promise(resolve => setTimeout(resolve, 2000))
     setSubmitted(true)
     setSubmitting(false)
-    toast.success('Application submitted! Our team will contact you within 48 hours \u2726')
+    toast.success('Application submitted! Our team will contact you within 48 hours ✦')
   }
 
   const isStep1Valid = !!formData.providerType
@@ -164,8 +203,8 @@ export function PartnerOnboarding() {
           Welcome to the <em className="text-rose italic">Collective.</em>
         </h2>
         <p className="text-mauve text-sm leading-relaxed max-w-[400px] mx-auto mb-10 font-light">
-          Our curation team will review your sanctuary and reach out within 
-          48 hours. Prepare to elevate your clientele.
+          Our curation team will review your application and reach out within 
+          48 hours. Prepare to elevate your brand.
         </p>
 
         <div className="bg-linen px-8 py-4 inline-block mb-10 border border-dark/5">
@@ -206,12 +245,12 @@ export function PartnerOnboarding() {
             ✦ RARE PARTNER COLLECTIVE
           </p>
           <h2 className="font-playfair text-4xl md:text-5xl lg:text-[clamp(32px,3vw,44px)] font-light leading-tight">
-            Grow your<br />
-            <em className="text-gold italic">Sanctuary</em><br />
+            {config.title.split(' ').slice(0, 2).join(' ')}<br />
+            <em className="text-gold italic">{config.title.split(' ')[2]}</em><br />
             with RARE.
           </h2>
           <p className="text-cream/50 text-sm leading-relaxed mt-6 max-w-[280px] font-light">
-            Join an elite network of wellness destinations 
+            Join an elite network of wellness brands and destinations 
             trusted by thousands of high-performance clients.
           </p>
 
@@ -236,7 +275,7 @@ export function PartnerOnboarding() {
             The clientele is exactly who we want."
           </p>
           <p className="text-[10px] uppercase tracking-widest text-gold/40 mt-4 font-medium">
-            — Priya Sharma, Lume Wellness Spa
+            — Priya Sharma, Lume Wellness
           </p>
         </div>
       </div>
@@ -286,34 +325,34 @@ export function PartnerOnboarding() {
               {currentStep === 0 && (
                 <div className="space-y-8">
                   <div>
-                    <h3 className="font-playfair text-3xl text-dark mb-2">What best describes your business?</h3>
-                    <p className="text-mauve text-sm font-light">Select the type that fits your offering.</p>
+                    <h3 className="font-playfair text-3xl text-dark mb-2">{config.step0Title}</h3>
+                    <p className="text-mauve text-sm font-light">Select the category that fits your offering.</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {PROVIDER_TYPES.map(type => (
+                    {config.types.map(providerType => (
                       <button
-                        key={type.id}
-                        onClick={() => updateForm('providerType', type.id)}
+                        key={providerType.id}
+                        onClick={() => updateForm('providerType', providerType.id)}
                         className={cn(
                           "p-8 border text-left transition-all duration-500 group relative overflow-hidden",
-                          formData.providerType === type.id
+                          formData.providerType === providerType.id
                             ? "border-rose bg-rose/[0.03] shadow-inner"
                             : "border-linen hover:border-rose/30 bg-white shadow-sm hover:shadow-md"
                         )}
                       >
                         <div className={cn(
                           "w-12 h-12 flex items-center justify-center mb-6 transition-colors duration-500",
-                          formData.providerType === type.id ? "bg-rose/10" : "bg-linen"
+                          formData.providerType === providerType.id ? "bg-rose/10" : "bg-linen"
                         )}>
-                          <type.icon className={cn(
+                          <providerType.icon className={cn(
                             "w-5 h-5",
-                            formData.providerType === type.id ? "text-rose" : "text-muted"
+                            formData.providerType === providerType.id ? "text-rose" : "text-muted"
                           )} />
                         </div>
-                        <p className="font-playfair text-dark text-lg font-light mb-2">{type.title}</p>
-                        <p className="text-[11px] text-mauve leading-relaxed font-light">{type.description}</p>
-                        {formData.providerType === type.id && (
+                        <p className="font-playfair text-dark text-lg font-light mb-2">{providerType.title}</p>
+                        <p className="text-[11px] text-mauve leading-relaxed font-light">{providerType.description}</p>
+                        {formData.providerType === providerType.id && (
                           <div className="flex items-center gap-2 mt-4">
                             <Check className="w-3.5 h-3.5 text-rose" />
                             <span className="text-[10px] text-rose uppercase tracking-[2px] font-medium">Selected</span>
@@ -341,25 +380,25 @@ export function PartnerOnboarding() {
               {currentStep === 1 && (
                 <div className="space-y-8">
                   <div>
-                    <h3 className="font-playfair text-3xl text-dark mb-2">Tell us about your sanctuary</h3>
+                    <h3 className="font-playfair text-3xl text-dark mb-2">{config.step1Title}</h3>
                     <p className="text-mauve text-sm font-light">Provide the core details of your business.</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField 
-                      label="Business Name" 
+                      label={config.nameLabel} 
                       icon={Building2} 
-                      placeholder="Lume Wellness Spa" 
+                      placeholder={config.namePlaceholder} 
                       value={formData.businessName}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateForm('businessName', e.target.value)}
                       required
                     />
                     <FormField 
-                      label="Years in Operation" 
-                      icon={Calendar} 
-                      placeholder="e.g. 5 years" 
-                      value={formData.yearsInOperation}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateForm('yearsInOperation', e.target.value)}
+                      label={config.extraFieldLabel} 
+                      icon={config.extraFieldIcon} 
+                      placeholder={config.extraFieldPlaceholder} 
+                      value={formData[config.extraFieldKey] as string}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateForm(config.extraFieldKey, e.target.value)}
                     />
                     <FormField 
                       label="City / Location" 
@@ -372,13 +411,13 @@ export function PartnerOnboarding() {
                     <FormField 
                       label="Website (Optional)" 
                       icon={Globe} 
-                      placeholder="www.yourspa.com" 
+                      placeholder="www.yourwebsite.com" 
                       value={formData.website}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateForm('website', e.target.value)}
                     />
                     <div className="md:col-span-2">
                       <FormField 
-                        label="Business Address" 
+                        label="Full Address" 
                         icon={Home} 
                         placeholder="Full address including pincode" 
                         value={formData.address}
@@ -419,14 +458,14 @@ export function PartnerOnboarding() {
                   <div className="space-y-6">
                     <div>
                       <label className="block text-[10px] uppercase tracking-[0.25em] text-muted mb-4 font-medium">
-                        Describe your services
+                        Describe your offerings
                       </label>
                       <div className="bg-linen/50 border border-dark/5 px-6 py-5 focus-within:border-gold/30 transition-colors">
                         <textarea
                           rows={4}
                           value={formData.description}
                           onChange={(e) => updateForm('description', e.target.value)}
-                          placeholder="Tell us what makes your wellness offering unique — treatments, specialties, signature experiences..."
+                          placeholder="Tell us what makes your wellness offering unique..."
                           className="bg-transparent border-none outline-none text-dark text-sm w-full placeholder:text-muted/50 font-light resize-none"
                         />
                       </div>
@@ -456,10 +495,10 @@ export function PartnerOnboarding() {
 
                     <div>
                       <label className="block text-[10px] uppercase tracking-[0.25em] text-muted mb-4 font-medium">
-                        Services Offered
+                        {config.tagsLabel}
                       </label>
                       <div className="flex flex-wrap gap-2">
-                        {SERVICE_TAGS.map(tag => (
+                        {config.tags.map(tag => (
                           <button
                             key={tag}
                             onClick={() => toggleTag(tag)}
@@ -525,21 +564,22 @@ export function PartnerOnboarding() {
                     <div className="flex items-center gap-4 mb-8 pb-8 border-b border-dark/5">
                       <div className="w-12 h-12 bg-rose/10 flex items-center justify-center">
                         {(() => {
-                          const Icon = PROVIDER_TYPES.find(p => p.id === formData.providerType)?.icon || Sparkles
+                          const Icon = config.types.find(p => p.id === formData.providerType)?.icon || Sparkles
                           return <Icon className="w-6 h-6 text-rose" />
                         })()}
                       </div>
                       <div>
                         <p className="text-[9px] uppercase tracking-widest text-muted font-medium">Provider Type</p>
                         <p className="font-playfair text-dark text-xl font-light">
-                          {PROVIDER_TYPES.find(p => p.id === formData.providerType)?.title}
+                          {config.types.find(p => p.id === formData.providerType)?.title}
                         </p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
                       {[
-                        ['Business Name', formData.businessName],
+                        [config.nameLabel, formData.businessName],
+                        [config.extraFieldLabel, formData[config.extraFieldKey] as string],
                         ['Location', formData.location],
                         ['Contact', formData.contactName],
                         ['Email', formData.email],
@@ -555,7 +595,7 @@ export function PartnerOnboarding() {
 
                     {formData.serviceTags.length > 0 && (
                       <div className="mt-10 pt-8 border-t border-dark/5">
-                        <p className="text-[9px] uppercase tracking-widest text-muted mb-4 font-medium">Services Offered</p>
+                        <p className="text-[9px] uppercase tracking-widest text-muted mb-4 font-medium">{config.tagsLabel}</p>
                         <div className="flex flex-wrap gap-2">
                           {formData.serviceTags.map(t => (
                             <span key={t} className="bg-white px-4 py-1.5 text-[9px] uppercase tracking-widest text-dark border border-dark/5">
